@@ -7,14 +7,18 @@ const planController = require('./../controllers/plan.js');
 const pathController = require('./../controllers/path.js');
 const courseController = require('./../controllers/course.js');
 const projectController = require('./../controllers/project.js');
+const qiniuController = require('./../controllers/qiniu.js');
+
 const Auth = require('./../middlewares/auth.js');
 // 必须登录
-router.use(Auth.isLogin);
+// router.use(Auth.isLogin);
 // 轮播图管理
-router.get('/carousel', Auth.permission('carousel-manager'), carouselController.index);
-router.post('/carousel', Auth.permission('carousel-manager'), carouselController.store);
-router.put('/carousel/:id', Auth.permission('carousel-manager'), carouselController.update);
-router.delete('/carousel/:id', Auth.permission('carousel-manager'), carouselController.destroy);
+// Auth.permission('carousel-manager'),
+router.get('/carousel', carouselController.index);
+router.post('/carousel', carouselController.store);
+router.put('/carousel/:id', carouselController.update);
+router.delete('/carousel/:id', carouselController.destroy);
+router.get('/qiniu/token',qiniuController.getQiniuToken)
 // 角色管理
 router.get('/role', roleController.index);
 router.post('/role', roleController.store);
