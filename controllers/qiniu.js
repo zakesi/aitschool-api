@@ -1,8 +1,8 @@
 const qiniu = require('qiniu');
-const accessKey = process.env.qiniuAccessKey;
-const secretKey = process.env.qiniuSecretKey
-const domain = process.env.qiniuDomain
-const bucket = process.env.qiniuBucket
+const accessKey = process.env.QINIU_ACCESS_KEY;
+const secretKey = process.env.QINIU_SECRET_KEY
+const domain = process.env.QINIU_DOMAIN
+const bucket = process.env.QINIU_BUCKET
 
 const qiniuController = {
   getQiniuToken:function(req, res,next){
@@ -12,7 +12,7 @@ const qiniuController = {
           scope: bucket
       };
       const putPolicy = new qiniu.rs.PutPolicy(options);
-      const token=putPolicy.uploadToken(mac);
+      const token = putPolicy.uploadToken(mac);
       res.json({error_code:0, data:{token,domain}, message:'请求成功'})
     }catch{
       res.json({error_code:1, message:"服务器错误"})
