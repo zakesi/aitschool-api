@@ -1,6 +1,5 @@
 const schema = require('async-validator').default;
 const Carousel = require('./../models/carousel.js')
-
 const carouselController = {
   // 轮播图列表
   index: async function(req, res, next) {
