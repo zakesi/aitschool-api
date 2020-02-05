@@ -14,10 +14,12 @@ const roleController = {
   },
   store: async function(req, res, next) {
     const name = req.body.name;
+    const description = req.body.description;
     const validator = new schema({
       name:  { type: 'string', required: true },
+      description:  { type: 'string', required: true },
     })
-    const params = { name };
+    const params = { name, description};
     try {
       await validator.validate(params)
       const ids = await Role.insert(params);
