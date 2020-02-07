@@ -3,6 +3,7 @@ const router = express.Router();
 const carouselController = require('./../controllers/carousel.js');
 const permissionController = require('./../controllers/permission.js');
 const roleController = require('./../controllers/role.js');
+const managerController = require('./../controllers/manager.js');
 const planController = require('./../controllers/plan.js');
 const pathController = require('./../controllers/path.js');
 const courseController = require('./../controllers/course.js');
@@ -24,6 +25,17 @@ router.get('/role', roleController.index);
 router.post('/role', roleController.store);
 router.put('/role/:id', roleController.update);
 router.delete('/role/:id', roleController.destroy);
+// 管理员管理
+router.get('/manager', managerController.index);
+router.get('/manager/:id', managerController.details);
+router.post('/manager', managerController.store);
+router.put('/manager/:id', managerController.update);
+router.delete('/manager/:id', managerController.destroy);
+router.get('/getPermission/:id', managerController.getPermissionArr);
+
+// 登陆
+router.post('/manager/login', managerController.login);
+
 // 用户角色管理
 router.get('/role/:id/users', roleController.getUsers);
 router.post('/role/:id/users', roleController.storeUsers);

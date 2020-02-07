@@ -20,6 +20,7 @@ exports.up = function(knex) {
     .createTable('roles', function (table) {
       table.increments('id');
       table.string('name', 255).unique();
+      table.text('description').comment('描述');
     })
     .createTable('user_roles', function (table) {
       table.integer('user_id', 11)

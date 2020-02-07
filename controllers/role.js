@@ -30,10 +30,12 @@ const roleController = {
   },
   update: async function(req, res, next) {
     const name = req.body.name;
+    const description = req.body.description;
     const validator = new schema({
       name:  { type: 'string', required: true },
+      description:  { type: 'string', required: true }
     })
-    const params = { name };
+    const params = { name, description};
     try {
       const id = req.params.id;
       await validator.validate(params)
@@ -99,15 +101,17 @@ const roleController = {
   getPermissions: async function(req, res, next) {
     try {
       const role_id = req.params.id;
+      const roles = await Role.where({id:role_id});
       const permissions = await rolePermission.where({ role_id })
       permissionsTransform = permissions.map(data => data.permission_id)
-      res.json({error_code: 0, data: { permissions: permissionsTransform } })
+      res.json({error_code: 0, data: { permissions: permissionsTransform,roles:roles[0]} })
     } catch (e) {
       res.json({error_code: 1, message: e.message})
     }
   },
   updatePermissions: async function(req, res, next) {
     const permissions = req.body.permissions;
+    console.log(permissions)
     const validator = new schema({
       permissions:  { type: 'array', required: true },
     })
@@ -134,6 +138,7 @@ const roleController = {
       }
       res.json({error_code: 0, message: '编辑成功' })
     } catch (e) {
+      console.log(e)
       res.json({error_code: 1, message: e.message || e.errors})
     }
 
