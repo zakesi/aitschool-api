@@ -1,6 +1,6 @@
 const schema = require('async-validator').default;
 const Manager = require('./../models/manager.js')
-const JWT = require('./../services/user')
+const servicesUser = require('./../services/user')
 const rolePermission = require('./../models/role_permission.js')
 const managerController = {
     index: async function(req, res, next) {
@@ -57,8 +57,8 @@ const managerController = {
         if(!data.length){
           return res.json({error_code: 1, message: "账号或密码错误"})
         }
-        let token = JWT.encrypt({ manager_id: data[0].id})
-        res.json({error_code: 0, data: { token}, message: '登陆成功' })
+        let token = servicesUser.encrypt({ manager_id: data[0].id})
+        res.json({error_code: 0, data: token, message: '登陆成功' })
       }catch(e){
         res.json({error_code: 1, message: e.message})
       }
@@ -67,7 +67,7 @@ const managerController = {
       try{
         let token = req.body.token;
         if(!token) return res.json({error_code: 1, message: '缺少数据，请重新登陆'})
-        let data = JWT.decode(token)
+        let data = servicesUser.decode(token)
         let managerData = await Manager.where({id:data.data.manager_id}).whereNull('isdeleted')
         if(!managerData.length) return res.json({error_code: 1, message: '缺少数据，请重新登陆'})
         let permissionArr = await rolePermission.where({role_id:managerData[0].roles_id})

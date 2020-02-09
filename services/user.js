@@ -17,14 +17,14 @@ const userService = {
       userInfo.id = userInfoRes[0].id
       userInfo.phone = userInfoRes[0].phone
     }
-    return JWT.sign({
+    return userService.encrypt({
       user_id: userInfo.id,
-    }, JWT_SECRET, {
-      expiresIn: '360d'
     });
   },
   encrypt: function(data) {
-    return JWT.sign({data}, JWT_SECRET);
+    return JWT.sign({data}, JWT_SECRET,{
+      expiresIn: '360d'
+    });
   },
   decode: function(data) {
     return JWT.verify(data, JWT_SECRET);
