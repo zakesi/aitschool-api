@@ -23,6 +23,12 @@ const userService = {
       expiresIn: '360d'
     });
   },
+  encrypt: function(data) {
+    return JWT.sign({data}, JWT_SECRET);
+  },
+  decode: function(data) {
+    return JWT.verify(data, JWT_SECRET);
+  },
   hasPermission: async function(user_id, permission) {
     const userPermissions = await userService.getUserPermission(user_id)
     const permissions = await Permission.where({ slug: permission })

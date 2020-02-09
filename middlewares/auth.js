@@ -1,5 +1,4 @@
-const JWT = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT = require('./../services/user')
 const userService = require('./../services/user.js')
 
 module.exports = {
@@ -7,19 +6,10 @@ module.exports = {
     const token = req.headers.authorization
       ? req.headers.authorization.split(' ')[1]
       : '';
-
     if(token) {
-      JWT.verify(token, JWT_SECRET, function(err, decoded) {
-        if(!err) {
-          res.locals.manager_id = decoded.manager_id;
-          next();
-        }else {
-          return res.status(401).json({
-            error_code: 401,
-            message :'Auth Expired'
-          })
-        }
-      });
+      const decoded = JWT.decode(token);
+      res.locals.manager_id = decoded.data.manager_id;
+      next();
     }else {
       return res.status(401).json({
         error_code: 401,

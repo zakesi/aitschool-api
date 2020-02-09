@@ -1,7 +1,6 @@
 const schema = require('async-validator').default;
 const Manager = require('./../models/manager.js')
-const JWT = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT = require('./../services/user')
 const rolePermission = require('./../models/role_permission.js')
 const managerController = {
     index: async function(req, res, next) {
@@ -58,7 +57,7 @@ const managerController = {
         if(!data.length){
           return res.json({error_code: 1, message: "账号或密码错误"})
         }
-        let token = managerController.auth({ manager_id: data[0].id})
+        let token = JWT.encrypt({ manager_id: data[0].id})
         res.json({error_code: 0, data: { token}, message: '登陆成功' })
       }catch(e){
         res.json({error_code: 1, message: e.message})
@@ -68,35 +67,16 @@ const managerController = {
       try{
         let token = req.body.token;
         if(!token) return res.json({error_code: 1, message: '缺少数据，请重新登陆'})
-        let data = await managerController.auth(token,'decode')
-        if(!data) {
-          res.status(401).json({
-            error_code: 401,
-            message :'Auth Expired'
-          })
-        }
-        let managerData = await Manager.where({id:data.manager_id}).whereNull('isdeleted')
+        let data = JWT.decode(token)
+        let managerData = await Manager.where({id:data.data.manager_id}).whereNull('isdeleted')
         if(!managerData.length) return res.json({error_code: 1, message: '缺少数据，请重新登陆'})
         let permissionArr = await rolePermission.where({role_id:managerData[0].roles_id})
         .leftJoin('permissions','permissions.id','role_permissions.permission_id')
         .select({permissions_slug:'permissions.slug'})
         res.json({error_code: 0, data: { permissionArr}})
       }catch(e){
+        console.log(e)
         res.json({error_code: 1, message: e.message})
-      }
-    },
-    auth: function(data, code="encrypt"){
-      if(code == 'encrypt'){
-        let token = JWT.sign({data}, JWT_SECRET);
-        return token
-      }else if(code == 'decode'){
-       return JWT.verify(data, JWT_SECRET, (err, decoded)=> {
-          if(!err) {``
-            return decoded.data
-          }else {
-            return
-          }
-        });
       }
     },
     update: async function(req, res, next) {
@@ -112,7 +92,6 @@ const managerController = {
           name:  { type: 'string', required: true },
           password:  { type: 'string', required: true },
         })
-        
         if(!id) return res.json({error_code: 1, message: "数据不足，请重新选择"})
         const params = { name, phone, password, roles_id};
         await validator.validate(params)
