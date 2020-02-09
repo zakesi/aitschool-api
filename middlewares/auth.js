@@ -11,7 +11,7 @@ module.exports = {
     if(token) {
       JWT.verify(token, JWT_SECRET, function(err, decoded) {
         if(!err) {
-          res.locals.user_id = decoded.user_id;
+          res.locals.manager_id = decoded.manager_id;
           next();
         }else {
           return res.status(401).json({

@@ -31,7 +31,7 @@ router.get('/manager/:id', managerController.details);
 router.post('/manager', managerController.store);
 router.put('/manager/:id', managerController.update);
 router.delete('/manager/:id', managerController.destroy);
-router.get('/getPermission/:id', managerController.getPermissionArr);
+router.post('/getPermission/', managerController.getPermissionArr);
 
 // 登陆
 router.post('/manager/login', managerController.login);

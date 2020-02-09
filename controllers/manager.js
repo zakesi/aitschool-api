@@ -41,7 +41,6 @@ const managerController = {
         let ids = await Manager.insert(params);
         res.json({error_code: 0, data: { id: ids[0] }, message: '创建成功' })
       }catch(e){
-        console.log(e)
         res.json({error_code: 1, message: e.message})
       }
     },
@@ -59,22 +58,45 @@ const managerController = {
         if(!data.length){
           return res.json({error_code: 1, message: "账号或密码错误"})
         }
-        let token = JWT.sign({ id: data[0].id,phone:data[0].phone,roles_id:data[0].roles_id}, JWT_SECRET);
-        
-        res.json({error_code: 0, data: { token, name:data[0].name,id:data[0].id, roles_id:data[0].roles_id}, message: '登陆成功' })
+        let token = managerController.auth({ manager_id: data[0].id})
+        res.json({error_code: 0, data: { token}, message: '登陆成功' })
       }catch(e){
         res.json({error_code: 1, message: e.message})
       }
     },
     getPermissionArr: async function(req, res, next) {
       try{
-        let role_id = req.params.id;
-        let permissionArr = await rolePermission.where({role_id})
+        let token = req.body.token;
+        if(!token) return res.json({error_code: 1, message: '缺少数据，请重新登陆'})
+        let data = await managerController.auth(token,'decode')
+        if(!data) {
+          res.status(401).json({
+            error_code: 401,
+            message :'Auth Expired'
+          })
+        }
+        let managerData = await Manager.where({id:data.manager_id}).whereNull('isdeleted')
+        if(!managerData.length) return res.json({error_code: 1, message: '缺少数据，请重新登陆'})
+        let permissionArr = await rolePermission.where({role_id:managerData[0].roles_id})
         .leftJoin('permissions','permissions.id','role_permissions.permission_id')
         .select({permissions_slug:'permissions.slug'})
         res.json({error_code: 0, data: { permissionArr}})
       }catch(e){
         res.json({error_code: 1, message: e.message})
+      }
+    },
+    auth: function(data, code="encrypt"){
+      if(code == 'encrypt'){
+        let token = JWT.sign({data}, JWT_SECRET);
+        return token
+      }else if(code == 'decode'){
+       return JWT.verify(data, JWT_SECRET, (err, decoded)=> {
+          if(!err) {``
+            return decoded.data
+          }else {
+            return
+          }
+        });
       }
     },
     update: async function(req, res, next) {
@@ -97,7 +119,6 @@ const managerController = {
         await Manager.update(id, params);
         res.json({error_code: 0, message: '编辑成功' })
       }catch(e){
-        console.log(e)
         res.json({error_code: 1, message: e.message})
       }
     },
