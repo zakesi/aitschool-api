@@ -46,11 +46,13 @@ router.get('/role/:id/permissions', roleController.getPermissions);
 router.put('/role/:id/permissions', roleController.updatePermissions);
 // 计划管理
 router.get('/plan', planController.index);
+router.get('/plan/:id', planController.show);
 router.post('/plan', planController.store);
 router.put('/plan/:id', planController.update);
 router.delete('/plan/:id', planController.destroy);
 // 路径管理
 router.get('/path', pathController.index);
+router.get('/path/:id', pathController.show);
 router.post('/path', pathController.store);
 router.put('/path/:id', pathController.update);
 router.delete('/path/:id', pathController.destroy);

@@ -1,12 +1,22 @@
 const schema = require('async-validator').default;
 const Plan = require('./../models/plan.js')
-
+const Path = require('./../models/path.js')
+const PathCourse = require('./../models/path_course.js')
 const planController = {
   index: async function(req, res, next) {
     try {
-      const plans = await Plan.all();
+      const plans = await Plan.all().orderBy('sort');
       res.json({error_code: 0, data: { plans } })
     } catch (e) {
+      res.json({error_code: 1, message: e.message})
+    }
+  },
+  show: async function(req, res, next) {
+    try{
+      let id = req.params.id;
+      const plans = await Plan.where({id})
+      res.json({error_code: 0, data: { plans:plans[0]} })
+    }catch(e){
       res.json({error_code: 1, message: e.message})
     }
   },
@@ -52,6 +62,10 @@ const planController = {
   destroy: async function(req, res, next) {
     try {
       const id = req.params.id;
+      const plans = await Plan.show({id});
+      const paths = await Path.where({plan_id:plans[0].id})
+      await PathCourse.knex().whereIn('path_id',paths.map(data => {return data.id})).del()
+      await Path.where({plan_id:plans[0].id}).del()
       await Plan.delete({id});
       res.json({error_code: 0, message: '删除成功' })
     } catch (e) {
