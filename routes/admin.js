@@ -9,6 +9,10 @@ const pathController = require('./../controllers/path.js');
 const courseController = require('./../controllers/course.js');
 const projectController = require('./../controllers/project.js');
 const qiniuController = require('./../controllers/qiniu.js');
+const chaptersController = require('./../controllers/chapters.js')
+const sectionsController = require('./../controllers/sections.js')
+const path_coursesController = require('./../controllers/path_courses.js');
+
 
 const Auth = require('./../middlewares/auth.js');
 // 必须登录
@@ -60,11 +64,28 @@ router.delete('/path/:id', pathController.destroy);
 router.post('/path/:id/course', pathController.courseStore);
 router.put('/path/:id/course/:course_id', pathController.courseUpdate);
 router.delete('/path/:id/course/:course_id', pathController.courseDestroy);
+// 路径关联课程排序
+router.post('/path/course/store', path_coursesController.store);
+router.post('/path/course/sort', path_coursesController.sort);
+router.delete('/path/course/sort', path_coursesController.destroy);
+
 // 课程管理
 router.get('/course', courseController.index);
+router.get('/course/:id', courseController.show);
 router.post('/course', courseController.store);
 router.put('/course/:id', courseController.update);
 router.delete('/course/:id', courseController.destroy);
+// 章管理
+router.get('/chapters/:id', chaptersController.index);
+router.post('/chapters', chaptersController.store);
+router.put('/chapters/:id', chaptersController.update);
+router.delete('/chapters/:id', chaptersController.destroy);
+// 节管理
+router.get('/sections/:id', sectionsController.show);
+router.post('/sections', sectionsController.store);
+router.post('/sections/sort', sectionsController.sort);
+router.put('/sections/:id', sectionsController.update);
+router.delete('/sections/:id', sectionsController.destroy);
 // 项目管理
 router.get('/project', projectController.index);
 router.post('/project', projectController.store);

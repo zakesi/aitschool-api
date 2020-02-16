@@ -6,7 +6,7 @@ exports.up = function(knex) {
       table.string('short_name', 255);
       table.text('tips').comment('提示');
       table.text('description').comment('描述');
-      table.integer('status').comment('状态');
+      table.integer('status').comment('状态,null:存在, 1:软删除');
       table.text('image_url').comment('图片地址');
       table.timestamp('created_at').defaultTo(knex.fn.now());
     })

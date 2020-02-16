@@ -7,7 +7,14 @@ const pathController = {
     try {
       const plan_id = req.query.plan_id;
       const paths = await Path.show({ plan_id });
-      res.json({error_code: 0, data: { paths } })
+      const pathsArr = await Promise.all(paths.map(async item => {
+        item.CourseArr = await PathCourse.where({path_id:item.id})
+        .leftJoin('courses','path_courses.course_id','courses.id')
+        .column('courses.*')
+        .orderBy('sort');
+        return item
+      }))
+      res.json({error_code: 0, data: { pathsArr } })
     } catch (e) {
       res.json({error_code: 1, message: e.message})
     }
@@ -16,10 +23,7 @@ const pathController = {
     try{
       const id = req.params.id;
       const paths = await Path.show({ id });
-      const courses = await PathCourse.where({path_id:id})
-      .leftJoin('courses','path_courses.course_id','courses.id')
-      .column('courses.*')
-      res.json({error_code: 0, data: { paths:paths[0],courses } })
+      res.json({error_code: 0, data: { paths:paths[0] } })
 
     }catch(e){
       res.json({error_code: 1, message: e.message})

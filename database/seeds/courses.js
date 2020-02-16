@@ -6,7 +6,6 @@ exports.seed = function(knex) {
         short_name: 'HTML 基础',
         tips: 'Web 入门必修课',
         description: 'HTML 描述',
-        status: 1,
       }
     ]),
 
