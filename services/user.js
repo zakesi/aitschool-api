@@ -17,13 +17,21 @@ const userService = {
       userInfo.id = userInfoRes[0].id
       userInfo.phone = userInfoRes[0].phone
     }
+
+    // 微信小程序登录，更新登录态
+    if(userInfo.session_key) {
+      await User.update(userInfo.id,{
+        session_key: userInfo.session_key
+      })
+    }
+
     return userService.encrypt({
       user_id: userInfo.id,
     });
   },
   encrypt: function(data) {
-    return JWT.sign({data}, JWT_SECRET,{
-      expiresIn: '360d'
+    return JWT.sign({ data }, JWT_SECRET,{
+      expiresIn: '30d'
     });
   },
   decode: function(data) {

@@ -5,6 +5,8 @@ exports.up = function(knex) {
       table.increments('id');
       table.string('openid', 255).unique();
       table.string('unionid', 255).unique();
+      table.string('appid', 255).comment('微信应用 ID');
+      table.string('session_key', 255).comment('微信小程序登录态');
       table.string('phone', 255).unique();
       table.string('nickname', 255);
       table.string('avatar_url', 255);

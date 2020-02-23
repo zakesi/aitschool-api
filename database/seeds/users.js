@@ -2,6 +2,7 @@ exports.seed = function(knex) {
   return Promise.all([
     knex('users').insert([
       { 
+        appid: 'wxf31cb4f589ed68c3',
         openid: 'oCI_l1CPdwAofDLQ9o5Y2L31xK7I',
         unionid:"ocWmn1HTooaYXFY3Y29MgvS0lBrc",
         nickname:"JaxChu",

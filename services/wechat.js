@@ -13,6 +13,7 @@ const wechatService = {
   oAuthWeb:async function(code) {
     const userInfo = await wx.oauth.getUserInfo(code)
     return {
+      appid: wechatConfig.appId,
       openid: userInfo.openid,
       unionid: userInfo.unionid,
       nickname: userInfo.nickname,
@@ -26,9 +27,10 @@ const wechatService = {
   // 小程序登录
   oAuthMini: async function(code, iv, encryptedData) {
     const sessionInfo = await wx.miniProgram.getSession(code)
-    const sessionKey = sessionInfo.session_key
-    const userInfo = await wx.miniProgram.decryptData(encryptedData, iv, sessionKey)
+    const sessionKey = sessionInfo.session_key;
+    const userInfo = await wx.miniProgram.decryptData(encryptedData, iv, sessionKey);
     return {
+      appid: wechatConfig.miniProgram.appId,
       openid: userInfo.openId,
       unionid: userInfo.unionId,
       nickname: userInfo.nickName,
@@ -37,12 +39,16 @@ const wechatService = {
       country: userInfo.country,
       province: userInfo.province,
       city: userInfo.city,
+      session_key: sessionKey,
     }
   },
+  // 获取 sessionInfo
+  getSession: async function(code) {
+    const sessionInfo =  await wx.miniProgram.getSession(code)
+    return sessionInfo
+  },
   // 获取手机号
-  getPhoneNumber: async function(code, iv, encryptedData) {
-    const sessionInfo = await wx.miniProgram.getSession(code)
-    const sessionKey = sessionInfo.session_key
+  getPhoneNumber: async function(sessionKey, iv, encryptedData) {
     const phoneInfo = await wx.miniProgram.decryptData(encryptedData, iv, sessionKey)
     return phoneInfo.purePhoneNumber
   }
