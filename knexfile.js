@@ -1,21 +1,21 @@
-require('dotenv').config()
+require("dotenv").config();
 module.exports = {
-  client: 'mysql',
+  client: "mysql",
   connection: {
     database: process.env.DB_NAME,
-    user:     process.env.DB_USER,
+    user: process.env.DB_USER,
     password: process.env.DB_PASS,
-    port    : process.env.DB_PORT
+    port: process.env.DB_PORT
   },
   pool: {
     min: 2,
     max: 10
   },
   migrations: {
-    directory: './database/migrations',
-    tableName: 'migrations'
+    directory: "./database/migrations",
+    tableName: "migrations"
   },
   seeds: {
-    directory: './database/seeds'
+    directory: "./database/seeds"
   }
 };
