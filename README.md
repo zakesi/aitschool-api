@@ -34,6 +34,21 @@
 
 6. npm run migrate:rollback:all
 
+## Git Commit
+[@commitlint/config-conventional](https://commitlint.js.org/#/)
+
+- upd
+- feat
+- fix
+- docs
+- style
+- refactor
+- test
+- chore
+
+> git commit -m "chore: add commitlint"
+
+
 ## Server Deploy
 
 pm2 startOrRestart ecosystem.config.js
