@@ -1,6 +1,5 @@
-const basicModel = require('./index.js');
-const config = require('./../knexfile.js');
-const knex = require('knex')(config);
+const basicModel = require("./index.js");
+const config = require("./../knexfile.js");
 
 class userModel extends basicModel {
   constructor(props = "users") {

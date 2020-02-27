@@ -1,4 +1,4 @@
-const basicModel = require('./index.js');
+const basicModel = require("./index.js");
 
 class carouselModel extends basicModel {
   constructor(props = "carousels") {

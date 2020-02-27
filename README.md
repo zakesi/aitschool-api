@@ -48,6 +48,12 @@
 
 > git commit -m "chore: add commitlint"
 
+## Eslint
+
+- eslint:recommended
+- eslint-config-prettier
+- eslint-plugin-prettier
+- Prettier
 
 ## Server Deploy
 

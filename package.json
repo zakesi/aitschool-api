@@ -9,7 +9,7 @@
     "migrate:rollback": "knex migrate:rollback",
     "migrate:rollback:all": "knex migrate:rollback --all",
     "seed:run": "knex seed:run",
-    "eslint": "eslint middlewares/**/*.js --fix"
+    "lint": "eslint '**/*.js' --fix"
   },
   "dependencies": {
     "async-validator": "^3.2.3",

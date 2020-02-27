@@ -1,17 +1,18 @@
-const { Wechat } = require('wechat-jssdk');
-const wechatConfig = require('./../wechatConfig.js')
+const { Wechat } = require("wechat-jssdk");
+const wechatConfig = require("./../wechatConfig.js");
 const wx = new Wechat(wechatConfig);
 const wechatService = {
   // PC 扫码登录地址
   oAuthWebUrl: function() {
-    const wechatReqUrl = 'https://open.weixin.qq.com/connect/qrconnect';
-    const wechatQuery = `appid=${wechatConfig.appId}&redirect_uri=${wechatConfig.wechatRedirectUrl}`
-    const wechatState = 'response_type=code&scope=snsapi_login&state=born2code#wechat_redirect'
-    return `${wechatReqUrl}?${wechatQuery}&${wechatState}`
+    const wechatReqUrl = "https://open.weixin.qq.com/connect/qrconnect";
+    const wechatQuery = `appid=${wechatConfig.appId}&redirect_uri=${wechatConfig.wechatRedirectUrl}`;
+    const wechatState =
+      "response_type=code&scope=snsapi_login&state=born2code#wechat_redirect";
+    return `${wechatReqUrl}?${wechatQuery}&${wechatState}`;
   },
   // PC 扫码登录
-  oAuthWeb:async function(code) {
-    const userInfo = await wx.oauth.getUserInfo(code)
+  oAuthWeb: async function(code) {
+    const userInfo = await wx.oauth.getUserInfo(code);
     return {
       appid: wechatConfig.appId,
       openid: userInfo.openid,
@@ -21,14 +22,18 @@ const wechatService = {
       gender: userInfo.sex,
       country: userInfo.country,
       province: userInfo.province,
-      city: userInfo.city,
-    }
+      city: userInfo.city
+    };
   },
   // 小程序登录
   oAuthMini: async function(code, iv, encryptedData) {
-    const sessionInfo = await wx.miniProgram.getSession(code)
+    const sessionInfo = await wx.miniProgram.getSession(code);
     const sessionKey = sessionInfo.session_key;
-    const userInfo = await wx.miniProgram.decryptData(encryptedData, iv, sessionKey);
+    const userInfo = await wx.miniProgram.decryptData(
+      encryptedData,
+      iv,
+      sessionKey
+    );
     return {
       appid: wechatConfig.miniProgram.appId,
       openid: userInfo.openId,
@@ -39,19 +44,23 @@ const wechatService = {
       country: userInfo.country,
       province: userInfo.province,
       city: userInfo.city,
-      session_key: sessionKey,
-    }
+      session_key: sessionKey
+    };
   },
   // 获取 sessionInfo
   getSession: async function(code) {
-    const sessionInfo =  await wx.miniProgram.getSession(code)
-    return sessionInfo
+    const sessionInfo = await wx.miniProgram.getSession(code);
+    return sessionInfo;
   },
   // 获取手机号
   getPhoneNumber: async function(sessionKey, iv, encryptedData) {
-    const phoneInfo = await wx.miniProgram.decryptData(encryptedData, iv, sessionKey)
-    return phoneInfo.purePhoneNumber
+    const phoneInfo = await wx.miniProgram.decryptData(
+      encryptedData,
+      iv,
+      sessionKey
+    );
+    return phoneInfo.purePhoneNumber;
   }
-}
+};
 
 module.exports = wechatService;

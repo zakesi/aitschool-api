@@ -1,4 +1,4 @@
-const basicModel = require('./index.js');
+const basicModel = require("./index.js");
 
 class sectionModel extends basicModel {
   constructor(props = "sections") {

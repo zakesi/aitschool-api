@@ -1,4 +1,4 @@
-const basicModel = require('./index.js');
+const basicModel = require("./index.js");
 
 class permissionGroupModel extends basicModel {
   constructor(props = "permission_groups") {
